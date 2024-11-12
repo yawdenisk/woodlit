@@ -1,0 +1,33 @@
+create table user(
+    id bigint auto_increment primary key,
+    name varchar(255) not null,
+    last_name varchar(255) not null,
+    email varchar(255) unique not null,
+    password varchar(255) not null,
+    country varchar(255) not null,
+    city varchar(255) not null,
+    post_index varchar(255) not null,
+    address varchar(255) not null
+);
+create table product(
+    id bigint auto_increment primary key,
+    image blob not null,
+    description varchar(255) not null,
+    price float not null
+);
+create table orders(
+    id bigint auto_increment primary key,
+    customer_id bigint,
+    product_id bigint,
+    price float not null,
+    time timestamp not null,
+    foreign key (customer_id) references user(id),
+    foreign key (product_id) references  product(id)
+);
+CREATE TABLE product_gallery (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    product_id BIGINT,
+    image BLOB,
+    FOREIGN KEY (product_id) REFERENCES product(id) ON DELETE CASCADE
+);
+
