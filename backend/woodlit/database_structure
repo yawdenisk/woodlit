@@ -11,6 +11,7 @@ create table user(
 );
 create table product(
     id bigint auto_increment primary key,
+    name varchar(255) not null,
     image blob not null,
     description varchar(255) not null,
     price float not null
