@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
+@ToString
 @Getter
 @Setter
 @NoArgsConstructor
@@ -15,7 +16,7 @@ public class Product {
     private Long id;
     private String name;
     @Lob
-    private byte [] image;
+    private byte[] image;
     private String description;
     private float price;
 }

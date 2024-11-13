@@ -1,6 +1,7 @@
 package org.yawdenisk.woodlit.Controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,11 +21,17 @@ public class ProductController {
                                         @RequestParam("price") float price,
                                         @RequestParam("image") MultipartFile image){
         try {
+            if (image.isEmpty()) {
+                return ResponseEntity.badRequest().body("Image file is empty");
+            }
             Product product = new Product();
             product.setName(name);
             product.setDescription(description);
             product.setPrice(price);
             product.setImage(image.getBytes());
+            System.out.println(product.toString());
+            System.out.println(image.getOriginalFilename());
+            System.out.println(image.getSize());
             productService.uploadProduct(product);
             return ResponseEntity.ok("Product uploaded successfully");
         }catch (Exception e){
@@ -58,5 +65,20 @@ public class ProductController {
         }catch (Exception e){
            return ResponseEntity.status(500).body("Error updating product" + e.getMessage());
         }
+    }
+    @GetMapping("getImage/{id}")
+    public ResponseEntity<byte[]> getProductImage(@PathVariable Long id){
+        Optional<Product> product = productService.getProductById(id);
+        Product p = product.get();
+        byte[] image = p.getImage();
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_JPEG)
+                .body(image);
+    }
+    @GetMapping("/get/{id}")
+    public Product getProduct(@PathVariable Long id){
+        Optional<Product> product = productService.getProductById(id);
+        Product result = product.get();
+        return result;
     }
 }
