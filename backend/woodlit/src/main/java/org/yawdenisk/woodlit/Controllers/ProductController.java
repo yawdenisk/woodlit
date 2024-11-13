@@ -6,8 +6,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.yawdenisk.woodlit.Entites.Product;
+import org.yawdenisk.woodlit.ProductFilter.*;
 import org.yawdenisk.woodlit.Services.ProductService;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -80,5 +83,23 @@ public class ProductController {
         Optional<Product> product = productService.getProductById(id);
         Product result = product.get();
         return result;
+    }
+    @PostMapping("/getfilteredproducts")
+    public List<Product> getFilteredProducts(@RequestParam String name,
+                                             @RequestParam float priceFrom,
+                                             @RequestParam float priceTo){
+        SearchParameters searchParameters = new SearchParameters();
+        searchParameters.setName(name);
+        searchParameters.setPriceFrom(priceFrom);
+        searchParameters.setPriceTo(priceTo);
+        Filter nameFilter = new NameFilter();
+        nameFilter.setSearchParameters(searchParameters);
+        Filter priceFilter = new PriceFilter();
+        priceFilter.setSearchParameters(searchParameters);
+        List<Product> products = productService.getAllProducts();
+        GeneralFilter generalFilter = new GeneralFilter();
+        generalFilter.setFilters(nameFilter);
+        generalFilter.setFilters(priceFilter);
+        return generalFilter.filter(products);
     }
 }
