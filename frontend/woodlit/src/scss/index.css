@@ -1,72 +1,42 @@
 * {
   margin: 0;
-}
-
-header {
-  background-color: black;
-  width: 100%;
-  height: 100px;
-}
-
-footer {
-  background-color: black;
-  width: 100%;
-  height: 100px;
-  position: absolute;
-  bottom: 0;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
 }
 
 .container {
-  margin: 0 150px;
+  margin: 0 60px;
 }
 
-.admin_panel {
-  display: flex;
-  border: 1px solid black;
+header {
   width: 100%;
-  height: 520px;
-  margin-top: 50px;
-}
-.admin_panel .view_panel {
-  border: 1px solid black;
-  width: 70%;
-  height: inherit;
-}
-.admin_panel .panel {
-  display: inline-block;
-  height: inherit;
-  width: 30%;
-  border: 1px solid black;
-}
-.admin_panel .panel p {
-  font-size: 40px;
-  text-align: center;
-  padding: 20px 0;
-}
-.admin_panel .panel .menu {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  padding: 0;
 }
-.admin_panel .panel .menu li {
-  width: 300px;
-  border-bottom: 1px solid white;
-  padding: 15px 0;
-  list-style: none;
-  text-align: center;
-  cursor: pointer;
-  background-color: black;
-  color: white;
+header .header-media {
+  display: flex;
+  gap: 20px;
 }
-.admin_panel .panel .menu .submenu {
-  padding: 0;
+header .header-media a img {
+  width: 25px;
 }
-.admin_panel .panel .menu .submenu li {
-  list-style-type: none;
-  border-bottom: 1px solid black;
-  cursor: pointer;
+header .header-navbar {
+  display: flex;
+  gap: 20px;
+}
+header .header-navbar a img {
+  width: 25px;
+}
+
+nav {
+  display: flex;
+  justify-content: center;
+}
+nav a {
+  padding: 20px 40px;
+  text-decoration: none;
   color: black;
-  background-color: orange;
+}
+nav a:hover {
+  border-bottom: 1px solid black;
 }/*# sourceMappingURL=index.css.map */
