@@ -16,7 +16,7 @@ public class Product {
     private Long id;
     private String name;
     @Lob
-    private byte[] image;
+    private String image;
     private String description;
     private float price;
 }

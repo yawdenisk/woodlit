@@ -1,13 +1,17 @@
 package org.yawdenisk.woodlit.Controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.yawdenisk.woodlit.Configuration.S3Configuration;
 import org.yawdenisk.woodlit.Entites.Product;
 import org.yawdenisk.woodlit.ProductFilter.*;
 import org.yawdenisk.woodlit.Services.ProductService;
+import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.services.s3.S3Client;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +22,8 @@ import java.util.Optional;
 public class ProductController {
     @Autowired
     private ProductService productService;
+    @Autowired
+    private S3Client s3Client;
     @PostMapping("/upload")
     public ResponseEntity<?> uploadProduct(@RequestParam("name") String name,
                                         @RequestParam("description") String description,
@@ -27,14 +33,18 @@ public class ProductController {
             if (image.isEmpty()) {
                 return ResponseEntity.badRequest().body("Image file is empty");
             }
+            String fileName = System.currentTimeMillis() + "_" + image.getOriginalFilename();
+            s3Client.putObject(request -> request
+                            .bucket("woodlit")
+                            .key(fileName)
+                    .acl("public-read"),
+                    RequestBody.fromBytes(image.getBytes()));
+            String imageUrl = "https://woodlit.s3.amazonaws.com/" + fileName;
             Product product = new Product();
             product.setName(name);
             product.setDescription(description);
             product.setPrice(price);
-            product.setImage(image.getBytes());
-            System.out.println(product.toString());
-            System.out.println(image.getOriginalFilename());
-            System.out.println(image.getSize());
+            product.setImage(imageUrl);
             productService.uploadProduct(product);
             return ResponseEntity.ok("Product uploaded successfully");
         }catch (Exception e){
@@ -62,21 +72,12 @@ public class ProductController {
             if(name != null)result.setName(name);
             if(description != null)result.setDescription(description);
             if(price != null)result.setPrice(price);
-            if(image != null)result.setImage(image.getBytes());
+            if(image != null)result.setImage("1");
             productService.uploadProduct(result);
             return ResponseEntity.ok("Product updated sucessfully");
         }catch (Exception e){
            return ResponseEntity.status(500).body("Error updating product" + e.getMessage());
         }
-    }
-    @GetMapping("getImage/{id}")
-    public ResponseEntity<byte[]> getProductImage(@PathVariable Long id){
-        Optional<Product> product = productService.getProductById(id);
-        Product p = product.get();
-        byte[] image = p.getImage();
-        return ResponseEntity.ok()
-                .contentType(MediaType.IMAGE_JPEG)
-                .body(image);
     }
     @GetMapping("/get/{id}")
     public Product getProduct(@PathVariable Long id){
@@ -101,5 +102,9 @@ public class ProductController {
         generalFilter.setFilters(nameFilter);
         generalFilter.setFilters(priceFilter);
         return generalFilter.filter(products);
+    }
+    @GetMapping("/getAll")
+    public List<Product> getAllProducts(){
+        return productService.getAllProducts();
     }
 }

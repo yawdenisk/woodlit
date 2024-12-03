@@ -12,7 +12,7 @@ create table user(
 create table product(
     id bigint auto_increment primary key,
     name varchar(255) not null,
-    image blob not null,
+    image varchar(255) not null,
     description varchar(255) not null,
     price float not null
 );
@@ -27,8 +27,8 @@ create table orders(
 );
 CREATE TABLE product_gallery (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    product_id BIGINT,
-    image BLOB,
+    product_id BIGINT not null,
+    image varchar(255) not null,
     FOREIGN KEY (product_id) REFERENCES product(id) ON DELETE CASCADE
 );
 
