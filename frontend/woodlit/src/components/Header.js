@@ -7,14 +7,14 @@ export default function Header() {
     <div className='container'>
     <header>
         <div className='header-media'>
-          <a href='#'><img src='.\images\instagram.png' alt='none logo'/></a>
-          <a href='#'><img src='.\images\facebook.png' alt='none logo'/></a>
+          <a href='/'><img src='.\images\instagram.png' alt='none logo'/></a>
+          <a href='/'><img src='.\images\facebook.png' alt='none logo'/></a>
         </div>  
-        <Link to="/"><img src='.\images\logo.avif'></img></Link>
+        <Link to="/"><img src='.\images\logo.avif' alt='none logo'></img></Link>
         <div className='header-navbar'>
-        <a href='#'><img src='.\images\search.png' alt='none logo'/></a>
-        <a href='#'><img src='.\images\profile.png' alt='none logo'/></a>
-        <a href='#'><img src='.\images\cart.png' alt='none logo'/></a>
+        <a href='/'><img src='.\images\search.png' alt='none logo'/></a>
+        <a href='/'><img src='.\images\profile.png' alt='none logo'/></a>
+        <a href='/'><img src='.\images\cart.png' alt='none logo'/></a>
         </div>
     </header>
     <nav> 

@@ -36,9 +36,8 @@ public class ProductController {
             String fileName = System.currentTimeMillis() + "_" + image.getOriginalFilename();
             s3Client.putObject(request -> request
                             .bucket("woodlit")
-                            .key(fileName)
-                    .acl("public-read"),
-                    RequestBody.fromBytes(image.getBytes()));
+                            .key(fileName),
+                            RequestBody.fromBytes(image.getBytes()));
             String imageUrl = "https://woodlit.s3.amazonaws.com/" + fileName;
             Product product = new Product();
             product.setName(name);

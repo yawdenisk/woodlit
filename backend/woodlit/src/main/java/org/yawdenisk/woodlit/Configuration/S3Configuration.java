@@ -10,10 +10,10 @@ import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 @Configuration
 public class S3Configuration {
-    String accessKey = "<AWS Access Key>";
-    String secretKey = "<AWS Secret Key>";
+    String accessKey = "AKIAQXUIXKGABJPDMUPV";
+    String secretKey = "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";
     AwsCredentials credentials = AwsBasicCredentials.create(accessKey, secretKey);
-    String regionName = "<us-east-1>";
+    String regionName = "eu-north-1";
     @Bean
     public S3Client s3Client() {
         AwsBasicCredentials credentials = AwsBasicCredentials.create(accessKey, secretKey);
