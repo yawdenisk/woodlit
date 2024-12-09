@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import loading from '../images/loading.svg'
 export default function Products() {
   const[products, setProducts] = useState([]);
   useEffect(() => {
@@ -12,6 +13,12 @@ export default function Products() {
       console.error(error);
     })
   }, []);
+  if(!products){
+    return <div className='loading'><img src={loading} alt='none gif'></img></div>
+  }
+  function setOption(){
+    
+  }
   return (
     <>
     <div className='container'>
@@ -24,7 +31,7 @@ export default function Products() {
             <li key={product.id}>
               <Link to={`product/${product.id}`}><img src={product.image} alt='none image'></img></Link>
               <p>{product.name}</p>
-              <p>{product.price} €</p>
+              <p>€ {product.price}</p>
             </li>
           ))}
         </ul>

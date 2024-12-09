@@ -2,7 +2,6 @@ import Footer from "./components/Footer";
 import Header from "./components/Header";
 import { BrowserRouter as Router,Routes,Route } from 'react-router-dom';
 import Products from "./components/Products";
-import Product from "./components/ProductDetails";
 import ProductDetails from "./components/ProductDetails";
 
 function App() {

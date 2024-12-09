@@ -19,4 +19,5 @@ public class Product {
     private String image;
     private String description;
     private float price;
+    private String features;
 }

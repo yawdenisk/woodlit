@@ -12,10 +12,13 @@ import org.yawdenisk.woodlit.ProductFilter.*;
 import org.yawdenisk.woodlit.Services.ProductService;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteBucketRequest;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/product")
@@ -28,6 +31,7 @@ public class ProductController {
     public ResponseEntity<?> uploadProduct(@RequestParam("name") String name,
                                         @RequestParam("description") String description,
                                         @RequestParam("price") float price,
+                                           @RequestParam("features") String features,
                                         @RequestParam("image") MultipartFile image){
         try {
             if (image.isEmpty()) {
@@ -44,6 +48,7 @@ public class ProductController {
             product.setDescription(description);
             product.setPrice(price);
             product.setImage(imageUrl);
+            product.setFeatures(features);
             productService.uploadProduct(product);
             return ResponseEntity.ok("Product uploaded successfully");
         }catch (Exception e){
@@ -53,6 +58,9 @@ public class ProductController {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteProduct(@PathVariable Long id){
         try{
+            Optional<Product> product = productService.getProductById(id);
+            Product p = product.get();
+            s3Client.deleteObject(request -> request.bucket("woodlit").key(p.getImage()));
             productService.deleteProduct(id);
             return ResponseEntity.ok("Product deleted sucessfully");
         }catch (Exception e){
@@ -64,6 +72,7 @@ public class ProductController {
                                            @RequestParam(required = false, name = "name") String name,
                                            @RequestParam(required = false, name = "description") String description,
                                            @RequestParam(required = false, name = "price") Float price,
+                                           @RequestParam(required = false, name = "features") String features,
                                            @RequestParam(required = false, name = "image") MultipartFile image){
         try{
             Optional<Product> p = productService.getProductById(id);
@@ -71,7 +80,20 @@ public class ProductController {
             if(name != null)result.setName(name);
             if(description != null)result.setDescription(description);
             if(price != null)result.setPrice(price);
-            if(image != null)result.setImage("1");
+            if(features != null)result.setFeatures(features);
+            if(image != null){
+                s3Client.deleteObject(request -> request.bucket("woodlit").key(result.getImage()));
+                if (image.isEmpty()) {
+                    return ResponseEntity.badRequest().body("Image file is empty");
+                }
+                String fileName = System.currentTimeMillis() + "_" + image.getOriginalFilename();
+                s3Client.putObject(request -> request
+                                .bucket("woodlit")
+                                .key(fileName),
+                        RequestBody.fromBytes(image.getBytes()));
+                String imageUrl = "https://woodlit.s3.amazonaws.com/" + fileName;
+                result.setImage(imageUrl);
+            }
             productService.uploadProduct(result);
             return ResponseEntity.ok("Product updated sucessfully");
         }catch (Exception e){
@@ -79,10 +101,14 @@ public class ProductController {
         }
     }
     @GetMapping("/get/{id}")
-    public Product getProduct(@PathVariable Long id){
-        Optional<Product> product = productService.getProductById(id);
-        Product result = product.get();
-        return result;
+    public ResponseEntity<Product> getProduct(@PathVariable Long id){
+        try{
+            Optional<Product> product = productService.getProductById(id);
+            return ResponseEntity.ok(product.get());
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(null);
+        }
     }
     @PostMapping("/getfilteredproducts")
     public List<Product> getFilteredProducts(@RequestParam String name,
