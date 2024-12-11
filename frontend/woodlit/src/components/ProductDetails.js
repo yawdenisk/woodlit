@@ -35,9 +35,9 @@ export default function ProductDetails() {
           <button>ADD TO CART</button>
             <div className='description'>
               <ul>
-                <li onClick={() => setActiveTab('description')}>DESCRIPTION</li>
-                <li onClick={() => setActiveTab('features')}>FEATURES</li>
-                <li onClick={() => setActiveTab('construction')}>ALL-CEDAR CONSTRUCTION</li>
+                <li onClick={() => setActiveTab('description')} style={{borderBottom : activeTab === 'description' ? '1px solid black' : 'none'}}>DESCRIPTION</li>
+                <li onClick={() => setActiveTab('features')} style={{borderBottom : activeTab === 'features' ? '1px solid black' : 'none'}}>FEATURES</li>
+                <li onClick={() => setActiveTab('construction')} style={{borderBottom : activeTab === 'construction' ? '1px solid black' : 'none'}}>ALL-CEDAR CONSTRUCTION</li>
               </ul>
               {activeTab === 'description' && (
                 <p>{product.description}</p>

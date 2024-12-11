@@ -1,4 +1,5 @@
-create table user(
+
+create table woodlit.user(
     id bigint auto_increment primary key,
     name varchar(255) not null,
     last_name varchar(255) not null,
@@ -7,17 +8,20 @@ create table user(
     country varchar(255) not null,
     city varchar(255) not null,
     post_index varchar(255) not null,
-    address varchar(255) not null
+    address varchar(255) not null,
+    username varchar(255) not null,
+    roles varchar(255) not null
 );
-create table product(
+create table woodlit.product(
     id bigint auto_increment primary key,
     name varchar(255) not null,
     image varchar(255) not null,
     description varchar(255) not null,
-    price float not null
+    price float not null,
+    features varchar(1024) not null
 );
-create table orders(
-    id bigint auto_increment primary key,
+create table woodlit.orders(
+    id bigint not null primary key,
     customer_id bigint,
     product_id bigint,
     price float not null,
@@ -25,9 +29,9 @@ create table orders(
     foreign key (customer_id) references user(id),
     foreign key (product_id) references  product(id)
 );
-CREATE TABLE product_gallery (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    product_id BIGINT not null,
+CREATE TABLE woodlit.product_gallery (
+    id bigint not null primary key,
+    product_id bigint not null,
     image varchar(255) not null,
     FOREIGN KEY (product_id) REFERENCES product(id) ON DELETE CASCADE
 );

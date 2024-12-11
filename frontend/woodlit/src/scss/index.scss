@@ -92,17 +92,16 @@ nav{
     flex-wrap: wrap;
     display: flex;
     justify-content: space-between;
-    width: inherit;
     .view{
         img{
-            height: 600px;
-            width: 600px;
+            height: 700px;
+            width: 700px;
             overflow: hidden;
             object-fit: cover;
         }
     }
     .information{
-        width: 50%;
+        width: 45%;
         button{
             padding: 15px 200px;
             border: 0;
