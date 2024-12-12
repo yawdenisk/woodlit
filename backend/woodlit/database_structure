@@ -16,7 +16,7 @@ create table woodlit.product(
     id bigint auto_increment primary key,
     name varchar(255) not null,
     image varchar(255) not null,
-    description varchar(255) not null,
+    description varchar(1024) not null,
     price float not null,
     features varchar(1024) not null
 );

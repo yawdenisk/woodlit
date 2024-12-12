@@ -13,11 +13,8 @@ export default function Products() {
       console.error(error);
     })
   }, []);
-  if(!products){
+  if(products.length == 0){
     return <div className='loading'><img src={loading} alt='none gif'></img></div>
-  }
-  function setOption(){
-    
   }
   return (
     <>
