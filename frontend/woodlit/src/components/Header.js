@@ -19,7 +19,7 @@ export default function Header() {
         <Link to="/"><img src={logo} alt='none logo'></img></Link>
         <div className='header-navbar'>
         <a href='/'><img src={searchIcon} alt='none logo'/></a>
-        <a href='/'><img src={profileIcon} alt='none logo'/></a>
+        <Link to="/user"><img src={profileIcon} alt='none logo'/></Link>
         <a href='/'><img src={cartIcon} alt='none logo'/></a>
         </div>
     </header>

@@ -8,7 +8,7 @@ export default function ProductDetails() {
     const [product, setProduct] = useState(null);
     const [activeTab, setActiveTab] = useState('description');
     useEffect(() => {
-        axios.get(`/product/get/${id}`)
+        axios.get(`http://localhost:8080/product/get/${id}`)
         .then(response => {
             setProduct(response.data);
         })

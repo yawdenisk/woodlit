@@ -1,21 +1,29 @@
 package org.yawdenisk.woodlit.Controllers;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.yawdenisk.woodlit.Entites.User;
+import org.yawdenisk.woodlit.Mappers.UserMapper;
 import org.yawdenisk.woodlit.Services.UserService;
 
 @Controller
 @RequestMapping("/user")
+@CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
     @Autowired
     private UserService userService;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private UserMapper userMapper;
+
     @PostMapping("/create")
     public ResponseEntity<?> createUser(@RequestParam("name") String name,
                                         @RequestParam("last_name") String last_name,
@@ -43,5 +51,23 @@ public class UserController {
         } catch (Exception e) {
             return ResponseEntity.status(500).body("User don't created");
         }
+    }
+    @GetMapping("/getUserDetails")
+    public ResponseEntity<User> getUserDetails() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findByUsername(authentication.getName());
+        return ResponseEntity.ok(user);
+    }
+
+    @GetMapping("/checkAuth")
+    public ResponseEntity<Boolean> checkAuth() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        boolean isAuthenticated = authentication != null && authentication.isAuthenticated() && !authentication.getName().equals("anonymousUser");
+        return ResponseEntity.ok(isAuthenticated);
+    }
+    @GetMapping("/getCsrf")
+    public ResponseEntity<String> getCsrf(HttpServletRequest request) {
+        CsrfToken csrfToken = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+        return ResponseEntity.ok(csrfToken.getToken());
     }
 }

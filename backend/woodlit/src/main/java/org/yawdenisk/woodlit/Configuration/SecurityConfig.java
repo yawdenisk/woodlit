@@ -22,8 +22,9 @@ public class SecurityConfig {
     }
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
-        return http.authorizeRequests(authorizeRequests ->
-                authorizeRequests.requestMatchers("/product/getAll","/product/get/{id}", "/user/create").permitAll()
+        return http
+                .authorizeRequests(authorizeRequests ->
+                authorizeRequests.requestMatchers("/user/getCsrf", "/product/getAll","/product/get/{id}", "/user/create", "/user/checkAuth").permitAll()
         .anyRequest().authenticated())
                 .formLogin(Customizer.withDefaults())
                 .build();

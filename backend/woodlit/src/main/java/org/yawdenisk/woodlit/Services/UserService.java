@@ -20,6 +20,11 @@ public class UserService implements UserDetailsService {
         return user.map(org.yawdenisk.woodlit.Entites.UserDetails::new)
                 .orElseThrow(() -> new UsernameNotFoundException(username + "not found"));
     }
+    public User findByUsername(String username) {
+        Optional<User> user = userRepository.findByUsername(username);
+        User u = user.get();
+        return u;
+    }
     public User createUser(User user) {
         return userRepository.save(user);
     }
