@@ -1,8 +1,11 @@
 package org.yawdenisk.woodlit.Controllers;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,9 +16,10 @@ import org.yawdenisk.woodlit.Entites.User;
 import org.yawdenisk.woodlit.Mappers.UserMapper;
 import org.yawdenisk.woodlit.Services.UserService;
 
+import java.util.Map;
+
 @Controller
 @RequestMapping("/user")
-@CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
     @Autowired
     private UserService userService;
@@ -23,6 +27,8 @@ public class UserController {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     @PostMapping("/create")
     public ResponseEntity<?> createUser(@RequestParam("name") String name,
@@ -45,7 +51,7 @@ public class UserController {
             user.setUsername(username);
             user.setCountry(country);
             user.setPassword(passwordEncoder.encode(password));
-            user.setRoles("USER");
+            user.setRoles("ROLE_USER");
             userService.createUser(user);
             return ResponseEntity.ok("User created");
         } catch (Exception e) {
@@ -69,5 +75,18 @@ public class UserController {
     public ResponseEntity<String> getCsrf(HttpServletRequest request) {
         CsrfToken csrfToken = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
         return ResponseEntity.ok(csrfToken.getToken());
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody Map<String, String> loginRequest, HttpServletRequest request) {
+        String username = loginRequest.get("username");
+        String password = loginRequest.get("password");
+        HttpSession session = request.getSession();
+        session.setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(username, password)
+        );
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        return ResponseEntity.ok("Login successful");
     }
 }
