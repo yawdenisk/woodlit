@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.yawdenisk.woodlit.Configuration.S3Configuration;
 import org.yawdenisk.woodlit.Entites.Product;
+import org.yawdenisk.woodlit.Exceptions.ProductNotFoundException;
 import org.yawdenisk.woodlit.ProductFilter.*;
 import org.yawdenisk.woodlit.Services.ProductService;
 import software.amazon.awssdk.core.sync.RequestBody;
@@ -74,14 +75,13 @@ public class ProductController {
                                            @RequestParam(required = false, name = "features") String features,
                                            @RequestParam(required = false, name = "image") MultipartFile image){
         try{
-            Optional<Product> p = productService.getProductById(id);
-            Product result = p.get();
-            if(name != null)result.setName(name);
-            if(description != null)result.setDescription(description);
-            if(price != null)result.setPrice(price);
-            if(features != null)result.setFeatures(features);
+            Product product = productService.getProductById(id).orElseThrow(() -> new ProductNotFoundException());
+            if(name != null)product.setName(name);
+            if(description != null)product.setDescription(description);
+            if(price != null)product.setPrice(price);
+            if(features != null)product.setFeatures(features);
             if(image != null){
-                s3Client.deleteObject(request -> request.bucket("woodlit").key(result.getImage()));
+                s3Client.deleteObject(request -> request.bucket("woodlit").key(product.getImage()));
                 if (image.isEmpty()) {
                     return ResponseEntity.badRequest().body("Image file is empty");
                 }
@@ -91,9 +91,9 @@ public class ProductController {
                                 .key(fileName),
                         RequestBody.fromBytes(image.getBytes()));
                 String imageUrl = "https://woodlit.s3.amazonaws.com/" + fileName;
-                result.setImage(imageUrl);
+                product.setImage(imageUrl);
             }
-            productService.uploadProduct(result);
+            productService.uploadProduct(product);
             return ResponseEntity.ok("Product updated sucessfully");
         }catch (Exception e){
            return ResponseEntity.status(500).body("Error updating product" + e.getMessage());
@@ -102,8 +102,8 @@ public class ProductController {
     @GetMapping("/get/{id}")
     public ResponseEntity<Product> getProduct(@PathVariable Long id){
         try{
-            Optional<Product> product = productService.getProductById(id);
-            return ResponseEntity.ok(product.get());
+            Product product = productService.getProductById(id).orElseThrow(() -> new ProductNotFoundException());
+            return ResponseEntity.ok(product);
         }catch (Exception e){
             e.printStackTrace();
             return ResponseEntity.status(500).body(null);

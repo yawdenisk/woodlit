@@ -1,6 +1,5 @@
 package org.yawdenisk.woodlit.Services;
 
-import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -20,10 +19,8 @@ public class UserService implements UserDetailsService {
         return user.map(org.yawdenisk.woodlit.Entites.UserDetails::new)
                 .orElseThrow(() -> new UsernameNotFoundException(username + "not found"));
     }
-    public User findByUsername(String username) {
-        Optional<User> user = userRepository.findByUsername(username);
-        User u = user.get();
-        return u;
+    public Optional<User> findByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
     public User createUser(User user) {
         return userRepository.save(user);

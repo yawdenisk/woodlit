@@ -22,6 +22,12 @@ export default function ProductDetails() {
     const formattedFeatures = product.features.split("\n").map((line, index) => (
       <span key={index}>{line}<br /></span>
     ));
+    function handleSubmit(){
+      axios.post('http://localhost:8080/cart/add',{
+        productId: Number(id),
+        quantity: 1
+      }, {withCredentials: true})
+    }
   return (
     <>
     <div className='container'>
@@ -32,7 +38,7 @@ export default function ProductDetails() {
         <div className='information'>
           <h1>{product.name}</h1>
           <p>€ {product.price}</p>
-          <button>ADD TO CART</button>
+          <button onClick={handleSubmit}>ADD TO CART</button>
             <div className='description'>
               <ul>
                 <li onClick={() => setActiveTab('description')} style={{borderBottom : activeTab === 'description' ? '1px solid black' : 'none'}}>DESCRIPTION</li>

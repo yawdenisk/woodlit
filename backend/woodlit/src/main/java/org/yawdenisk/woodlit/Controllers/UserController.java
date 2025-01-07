@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.yawdenisk.woodlit.Entites.User;
 import org.yawdenisk.woodlit.Entites.UserResponce;
+import org.yawdenisk.woodlit.Exceptions.UserNotFoundException;
 import org.yawdenisk.woodlit.Mappers.UserMapper;
 import org.yawdenisk.woodlit.Services.UserService;
 
@@ -26,25 +27,13 @@ public class UserController {
     @Autowired
     private UserService userService;
     @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
     private UserMapper userMapper;
     @Autowired
     private AuthenticationProvider authenticationProvider;
 
     @PostMapping("/create")
-    public ResponseEntity<?> createUser(@RequestBody Map<String, String> userRequest){
+    public ResponseEntity<?> createUser(@RequestBody User user) {
         try{
-            User user = new User();
-            user.setName(userRequest.get("name"));
-            user.setLast_name(userRequest.get("last_name"));
-            user.setCity(userRequest.get("city"));
-            user.setAddress(userRequest.get("address"));
-            user.setEmail(userRequest.get("email"));
-            user.setPost_index(userRequest.get("post_index"));
-            user.setUsername(userRequest.get("username"));
-            user.setCountry(userRequest.get("country"));
-            user.setPassword(passwordEncoder.encode(userRequest.get("password")));
             user.setRoles("ROLE_USER");
             userService.createUser(user);
             return ResponseEntity.ok("User created");
@@ -61,16 +50,10 @@ public class UserController {
     @GetMapping("/getUserDetails")
     public ResponseEntity<UserResponce> getUserDetails() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        try {
-            User user = userService.findByUsername(authentication.getName());
-            UserResponce userResponce = userMapper.mapToUserResponce(user);
-            return ResponseEntity.ok(userResponce);
-        }catch (Exception e){
-            e.printStackTrace();
-            return ResponseEntity.badRequest().build();
-        }
+        User user = userService.findByUsername(authentication.getName()).orElseThrow(() -> new UserNotFoundException());
+        UserResponce userResponce = userMapper.mapToUserResponce(user);
+        return ResponseEntity.ok(userResponce);
     }
-
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> loginRequest, HttpServletRequest request) {
         String username = loginRequest.get("username");
