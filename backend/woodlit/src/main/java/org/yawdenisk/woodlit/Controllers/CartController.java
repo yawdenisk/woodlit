@@ -35,7 +35,7 @@ public class CartController {
     public ResponseEntity<?> addItemToCart(@RequestBody CartItem cartItem) {
         try{
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            User user = userService.findByUsername(authentication.getName()).orElseThrow(() -> new UserNotFoundException());
+            User user = userService.findByEmail(authentication.getName()).orElseThrow(() -> new UserNotFoundException());
             Cart cart = cartService.findCartByUser(user).orElseGet(() -> {
                         Cart newCart = new Cart();
                         newCart.setUser(user);

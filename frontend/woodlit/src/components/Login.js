@@ -3,7 +3,7 @@
 import {Link, useNavigate } from 'react-router-dom';
 
   export default function Login() {
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     
     const navigate = useNavigate();
@@ -12,7 +12,7 @@ import {Link, useNavigate } from 'react-router-dom';
       event.preventDefault();
       try{
         await axios.post("http://localhost:8080/user/login",{  
-          username,
+          email,
           password,
         },
           {withCredentials:true}  
@@ -25,7 +25,7 @@ import {Link, useNavigate } from 'react-router-dom';
       <>
       <form className='formLogin' onSubmit={handleSubmit}>
         <p>Sing in</p>
-        <input type='text' name='username' placeholder='username' onChange={(e) => setUsername(e.target.value)}></input>
+        <input type='text' name='email' placeholder='email' onChange={(e) => setEmail(e.target.value)}></input>
         <input type='text' name='password' placeholder='password' onChange={(e) => setPassword(e.target.value)}></input>
         <button type='submit'>Submit</button>
         <h6>Don't have an account? <Link to="/register">Sign up</Link></h6>

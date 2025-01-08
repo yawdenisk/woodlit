@@ -2,6 +2,9 @@ package org.yawdenisk.woodlit.Entites;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.UuidGenerator;
+
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -10,8 +13,8 @@ import lombok.*;
 @Table(name = "product")
 public class Product {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @UuidGenerator
+    private UUID id;
     @Column(nullable = false)
     private String name;
     @Column(nullable = false)

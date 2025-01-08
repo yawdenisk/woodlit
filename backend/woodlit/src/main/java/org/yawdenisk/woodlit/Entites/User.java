@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.UuidGenerator;
+
+import java.util.UUID;
 
 @Setter
 @Getter
@@ -12,10 +15,8 @@ import lombok.Setter;
 @Table(name = "user")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Column(unique = true, nullable = false)
-    private String username;
+    @UuidGenerator
+    private UUID id;
     @Column(nullable = false)
     private String name;
     @Column(nullable = false)

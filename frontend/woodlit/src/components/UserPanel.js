@@ -45,7 +45,6 @@ export default function UserPanel() {
                 <div className='view'>
                     {item == 'account' &&(
                         <>
-                        <p>Username: {userDetails.username}</p>
                         <p>Email: {userDetails.email}</p>
                         <p>Name: {userDetails.name}</p>
                         <p>Last name: {userDetails.last_name}</p>

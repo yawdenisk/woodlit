@@ -3,7 +3,6 @@ import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 
 export default function Registration() {
-    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');
@@ -30,7 +29,6 @@ export default function Registration() {
         }
         try {
             await axios.post('http://localhost:8080/user/create', {
-                username,
                 password,
                 email,
                 name,
@@ -58,16 +56,12 @@ export default function Registration() {
     const validateForm = () => {
         const validationErrors = {};
 
-        if (!username.trim()) {
-            validationErrors.username = 'Username is required';
-        }
+        if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            validationErrors.email = 'Enter a valid email';
+        }   
 
         if (password.length < 8 || password.length > 16) {
             validationErrors.password = 'Password must be between 8 and 16 characters';
-        }
- 
-        if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-            validationErrors.email = 'Enter a valid email';
         }
 
         if (!name.trim()) {
@@ -106,12 +100,12 @@ export default function Registration() {
                     </div>
                 )}
             <form className='' onSubmit={handleSubmit}>
-                <input
+            <input
                     type="text"
-                    name="username"
-                    placeholder="username"
-                    onChange={(e) => setUsername(e.target.value)}
-                    style={getFieldStyle('username')}
+                    name="email"
+                    placeholder="email"
+                    onChange={(e) => setEmail(e.target.value)}
+                    style={getFieldStyle('email')} 
                 />
                 <input
                     type="text"
@@ -119,13 +113,6 @@ export default function Registration() {
                     placeholder="password"
                     onChange={(e) => setPassword(e.target.value)}
                     style={getFieldStyle('password')} 
-                />
-                <input
-                    type="text"
-                    name="email"
-                    placeholder="email"
-                    onChange={(e) => setEmail(e.target.value)}
-                    style={getFieldStyle('email')} 
                 />
                 <input
                     type="text"

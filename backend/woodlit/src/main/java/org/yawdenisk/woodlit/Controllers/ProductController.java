@@ -49,7 +49,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteProduct(@PathVariable Long id) {
+    public ResponseEntity<?> deleteProduct(@PathVariable UUID id) {
         try {
             Product product = productService.getProductById(id).orElseThrow(() -> new ProductNotFoundException());
             s3Client.deleteObject(request -> request.bucket("woodlit").key(product.getImage()));
@@ -61,7 +61,7 @@ public class ProductController {
     }
 
     @PutMapping("update/{id}")
-    public ResponseEntity<?> updateProduct(@PathVariable Long id,
+    public ResponseEntity<?> updateProduct(@PathVariable UUID id,
                                            @RequestParam(required = false, name = "name") String name,
                                            @RequestParam(required = false, name = "description") String description,
                                            @RequestParam(required = false, name = "price") Float price,
@@ -94,7 +94,7 @@ public class ProductController {
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<?> getProduct(@PathVariable Long id) {
+    public ResponseEntity<?> getProduct(@PathVariable UUID id) {
             Product product = productService.getProductById(id).orElseThrow(() -> new ProductNotFoundException());
             return ResponseEntity.ok(product);
     }

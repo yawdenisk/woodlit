@@ -8,6 +8,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.yawdenisk.woodlit.Entites.User;
@@ -17,7 +18,6 @@ import org.yawdenisk.woodlit.Exceptions.UserNotFoundException;
 import org.yawdenisk.woodlit.Mappers.UserMapper;
 import org.yawdenisk.woodlit.Services.UserService;
 
-import java.util.Map;
 
 @Controller
 @RequestMapping("/user")
@@ -28,10 +28,13 @@ public class UserController {
     private UserMapper userMapper;
     @Autowired
     private AuthenticationProvider authenticationProvider;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @PostMapping("/create")
     public ResponseEntity<?> createUser(@RequestBody User user) {
         try {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
             user.setRoles("ROLE_USER");
             userService.createUser(user);
             return ResponseEntity.ok("User created");
@@ -49,7 +52,7 @@ public class UserController {
     @GetMapping("/getUserDetails")
     public ResponseEntity<?> getUserDetails() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userService.findByUsername(authentication.getName()).orElseThrow(() -> new UserNotFoundException());
+        User user = userService.findByEmail(authentication.getName()).orElseThrow(() -> new UserNotFoundException());
         UserResponce userResponce = userMapper.mapToUserResponce(user);
         return ResponseEntity.ok(userResponce);
     }
@@ -58,7 +61,7 @@ public class UserController {
     public ResponseEntity<?> login(@RequestBody UserRequest userRequest, HttpServletRequest request) {
         try{
             Authentication authentication = authenticationProvider.authenticate(
-                    new UsernamePasswordAuthenticationToken(userRequest.getUsername(), userRequest.getPassword())
+                    new UsernamePasswordAuthenticationToken(userRequest.getEmail(), userRequest.getPassword())
             );
             HttpSession session = request.getSession();
             session.setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());

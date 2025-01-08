@@ -14,13 +14,13 @@ public class UserService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> user = userRepository.findByUsername(username);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Optional<User> user = userRepository.findByEmail(email);
         return user.map(org.yawdenisk.woodlit.Entites.UserDetails::new)
-                .orElseThrow(() -> new UsernameNotFoundException(username + "not found"));
+                .orElseThrow(() -> new UsernameNotFoundException(email + "not found"));
     }
-    public Optional<User> findByUsername(String username) {
-        return userRepository.findByUsername(username);
+    public Optional<User> findByEmail(String username) {
+        return userRepository.findByEmail(username);
     }
     public User createUser(User user) {
         return userRepository.save(user);
