@@ -104,12 +104,8 @@ public class ProductController {
 
     @GetMapping("/get/{id}")
     public ResponseEntity<?> getProduct(@PathVariable Long id) {
-        try {
             Product product = productService.getProductById(id).orElseThrow(() -> new ProductNotFoundException());
             return ResponseEntity.ok(product);
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Error getting product");
-        }
     }
 
     @GetMapping("/getAll")

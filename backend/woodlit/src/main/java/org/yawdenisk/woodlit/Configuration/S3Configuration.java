@@ -15,8 +15,6 @@ public class S3Configuration {
     String regionName = "eu-north-1";
     @Bean
     public S3Client s3Client() {
-        AwsBasicCredentials credentials = AwsBasicCredentials.create(accessKey, secretKey);
-
         return S3Client.builder()
                 .region(Region.of(regionName))
                 .credentialsProvider(StaticCredentialsProvider.create(credentials))
