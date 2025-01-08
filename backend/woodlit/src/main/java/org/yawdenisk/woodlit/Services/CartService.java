@@ -18,6 +18,6 @@ public class CartService {
     }
 
     public Optional<Cart> findCartByUser(User user) {
-        return Optional.ofNullable(cartRepository.findCartByUser(user));
+        return cartRepository.findCartByUser(user);
     }
 }

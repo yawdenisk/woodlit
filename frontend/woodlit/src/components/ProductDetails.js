@@ -24,8 +24,8 @@ export default function ProductDetails() {
     ));
     function handleSubmit(){
       axios.post('http://localhost:8080/cart/add',{
-        productId: Number(id),
-        quantity: 1
+        product,
+        quantity: 2
       }, {withCredentials: true})
     }
   return (

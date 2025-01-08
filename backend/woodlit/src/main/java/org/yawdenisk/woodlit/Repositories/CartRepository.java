@@ -5,7 +5,9 @@ import org.springframework.stereotype.Repository;
 import org.yawdenisk.woodlit.Entites.Cart;
 import org.yawdenisk.woodlit.Entites.User;
 
+import java.util.Optional;
+
 @Repository
 public interface CartRepository extends JpaRepository<Cart, Long> {
-    Cart findCartByUser(User user);
+    Optional<Cart> findCartByUser(User user);
 }

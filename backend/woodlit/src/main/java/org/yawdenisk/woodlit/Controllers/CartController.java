@@ -12,6 +12,7 @@ import org.yawdenisk.woodlit.Entites.Cart;
 import org.yawdenisk.woodlit.Entites.CartItem;
 import org.yawdenisk.woodlit.Entites.Product;
 import org.yawdenisk.woodlit.Entites.User;
+import org.yawdenisk.woodlit.Exceptions.ProductNotFoundException;
 import org.yawdenisk.woodlit.Exceptions.UserNotFoundException;
 import org.yawdenisk.woodlit.Services.CartService;
 import org.yawdenisk.woodlit.Services.ProductService;
@@ -31,7 +32,7 @@ public class CartController {
     @Autowired
     private ProductService productService;
     @PostMapping("/add")
-    public ResponseEntity<?> addItemToCart(Map<String, Object> request) {
+    public ResponseEntity<?> addItemToCart(@RequestBody CartItem cartItem) {
         try{
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             User user = userService.findByUsername(authentication.getName()).orElseThrow(() -> new UserNotFoundException());
@@ -41,20 +42,14 @@ public class CartController {
                         cartService.save(newCart);
                         return newCart;
                     });
-            Long productId = Long.valueOf(request.get("productId").toString()); // Убедимся, что это Long
-            Long quantity = Long.valueOf(request.get("quantity").toString());
-                CartItem cartItem = new CartItem();
-                cartItem.setCart(cart);
-                cartItem.setQuantity(quantity);
-                Optional<Product> product = productService.getProductById(productId);
-                Product p = product.get();
-                cartItem.setProduct(p);
-                cart.getItems().add(cartItem);
-                cartService.save(cart);
+            Product product = productService.getProductById(cartItem.getProduct().getId()).orElseThrow(() -> new ProductNotFoundException());
+            cartItem.setProduct(product);
+            cartItem.setCart(cart);
+            cart.getItems().add(cartItem);
+            cartService.save(cart);
             return ResponseEntity.ok().body("Product added to cart successfully");
         }catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(500).body(e.getMessage());
+            return ResponseEntity.status(500).body("Error while adding product to the cart");
         }
     }
 }
