@@ -1,24 +1,15 @@
 package org.yawdenisk.woodlit.Controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.yawdenisk.woodlit.Configuration.S3Configuration;
 import org.yawdenisk.woodlit.Entites.Product;
 import org.yawdenisk.woodlit.Exceptions.ProductNotFoundException;
-import org.yawdenisk.woodlit.ProductFilter.*;
 import org.yawdenisk.woodlit.Services.ProductService;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.DeleteBucketRequest;
-
-import java.time.Duration;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/product")
