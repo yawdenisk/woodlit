@@ -27,12 +27,13 @@ public class ProductController {
     private ProductService productService;
     @Autowired
     private S3Client s3Client;
+
     @PostMapping("/upload")
     public ResponseEntity<?> uploadProduct(@RequestParam("name") String name,
-                                        @RequestParam("description") String description,
-                                        @RequestParam("price") float price,
+                                           @RequestParam("description") String description,
+                                           @RequestParam("price") float price,
                                            @RequestParam("features") String features,
-                                        @RequestParam("image") MultipartFile image){
+                                           @RequestParam("image") MultipartFile image) {
         try {
             if (image.isEmpty()) {
                 return ResponseEntity.badRequest().body("Image file is empty");
@@ -41,7 +42,7 @@ public class ProductController {
             s3Client.putObject(request -> request
                             .bucket("woodlit")
                             .key(fileName),
-                            RequestBody.fromBytes(image.getBytes()));
+                    RequestBody.fromBytes(image.getBytes()));
             String imageUrl = "https://woodlit.s3.amazonaws.com/" + fileName;
             Product product = new Product();
             product.setName(name);
@@ -51,40 +52,41 @@ public class ProductController {
             product.setFeatures(features);
             productService.uploadProduct(product);
             return ResponseEntity.ok("Product uploaded successfully");
-        }catch (Exception e){
-            return ResponseEntity.status(500).body("Error uploading product:" + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error uploading product");
         }
     }
+
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteProduct(@PathVariable Long id){
-        try{
-            Optional<Product> product = productService.getProductById(id);
-            Product p = product.get();
-            s3Client.deleteObject(request -> request.bucket("woodlit").key(p.getImage()));
+    public ResponseEntity<?> deleteProduct(@PathVariable Long id) {
+        try {
+            Product product = productService.getProductById(id).orElseThrow(() -> new ProductNotFoundException());
+            s3Client.deleteObject(request -> request.bucket("woodlit").key(product.getImage()));
             productService.deleteProduct(id);
             return ResponseEntity.ok("Product deleted sucessfully");
-        }catch (Exception e){
-            return ResponseEntity.status(500).body("Error deleting product" + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error deleting product");
         }
     }
+
     @PutMapping("update/{id}")
     public ResponseEntity<?> updateProduct(@PathVariable Long id,
                                            @RequestParam(required = false, name = "name") String name,
                                            @RequestParam(required = false, name = "description") String description,
                                            @RequestParam(required = false, name = "price") Float price,
                                            @RequestParam(required = false, name = "features") String features,
-                                           @RequestParam(required = false, name = "image") MultipartFile image){
-        try{
+                                           @RequestParam(required = false, name = "image") MultipartFile image) {
+        try {
             Product product = productService.getProductById(id).orElseThrow(() -> new ProductNotFoundException());
-            if(name != null)product.setName(name);
-            if(description != null)product.setDescription(description);
-            if(price != null)product.setPrice(price);
-            if(features != null)product.setFeatures(features);
-            if(image != null){
-                s3Client.deleteObject(request -> request.bucket("woodlit").key(product.getImage()));
+            if (name != null) product.setName(name);
+            if (description != null) product.setDescription(description);
+            if (price != null) product.setPrice(price);
+            if (features != null) product.setFeatures(features);
+            if (image != null) {
                 if (image.isEmpty()) {
                     return ResponseEntity.badRequest().body("Image file is empty");
                 }
+                s3Client.deleteObject(request -> request.bucket("woodlit").key(product.getImage()));
                 String fileName = System.currentTimeMillis() + "_" + image.getOriginalFilename();
                 s3Client.putObject(request -> request
                                 .bucket("woodlit")
@@ -95,40 +97,47 @@ public class ProductController {
             }
             productService.uploadProduct(product);
             return ResponseEntity.ok("Product updated sucessfully");
-        }catch (Exception e){
-           return ResponseEntity.status(500).body("Error updating product" + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error updating product");
         }
     }
+
     @GetMapping("/get/{id}")
-    public ResponseEntity<Product> getProduct(@PathVariable Long id){
-        try{
+    public ResponseEntity<?> getProduct(@PathVariable Long id) {
+        try {
             Product product = productService.getProductById(id).orElseThrow(() -> new ProductNotFoundException());
             return ResponseEntity.ok(product);
-        }catch (Exception e){
-            e.printStackTrace();
-            return ResponseEntity.status(500).body(null);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error getting product");
         }
     }
-    @PostMapping("/getfilteredproducts")
-    public List<Product> getFilteredProducts(@RequestParam String name,
-                                             @RequestParam float priceFrom,
-                                             @RequestParam float priceTo){
-        SearchParameters searchParameters = new SearchParameters();
-        searchParameters.setName(name);
-        searchParameters.setPriceFrom(priceFrom);
-        searchParameters.setPriceTo(priceTo);
-        Filter nameFilter = new NameFilter();
-        nameFilter.setSearchParameters(searchParameters);
-        Filter priceFilter = new PriceFilter();
-        priceFilter.setSearchParameters(searchParameters);
-        List<Product> products = productService.getAllProducts();
-        GeneralFilter generalFilter = new GeneralFilter();
-        generalFilter.setFilters(nameFilter);
-        generalFilter.setFilters(priceFilter);
-        return generalFilter.filter(products);
-    }
+
     @GetMapping("/getAll")
-    public List<Product> getAllProducts(){
-        return productService.getAllProducts();
+    public ResponseEntity<?> getAllProducts() {
+        try {
+            List<Product> products = productService.getAllProducts();
+            return ResponseEntity.ok(products);
+        }catch (Exception e) {
+            return ResponseEntity.status(500).body("Error getting products");
+        }
     }
+
+//    @PostMapping("/getfilteredproducts")
+//    public List<Product> getFilteredProducts(@RequestParam String name,
+//                                             @RequestParam float priceFrom,
+//                                             @RequestParam float priceTo) {
+//        SearchParameters searchParameters = new SearchParameters();
+//        searchParameters.setName(name);
+//        searchParameters.setPriceFrom(priceFrom);
+//        searchParameters.setPriceTo(priceTo);
+//        Filter nameFilter = new NameFilter();
+//        nameFilter.setSearchParameters(searchParameters);
+//        Filter priceFilter = new PriceFilter();
+//        priceFilter.setSearchParameters(searchParameters);
+//        List<Product> products = productService.getAllProducts();
+//        GeneralFilter generalFilter = new GeneralFilter();
+//        generalFilter.setFilters(nameFilter);
+//        generalFilter.setFilters(priceFilter);
+//        return generalFilter.filter(products);
+//    }
 }

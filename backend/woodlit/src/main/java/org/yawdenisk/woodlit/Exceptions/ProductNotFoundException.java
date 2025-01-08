@@ -8,7 +8,7 @@ public class ProductNotFoundException extends CustomException {
 
     @Override
     public int getCode() {
-        return 400;
+        return 404;
     }
 
     @Override
