@@ -1,5 +1,6 @@
 package org.yawdenisk.woodlit.Entites;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,7 @@ public class CartItem {
     private Product product;
     @ManyToOne
     @JoinColumn(name = "cart_id")
+    @JsonIgnore
     private Cart cart;
     @Column(nullable = false)
     private Long quantity;

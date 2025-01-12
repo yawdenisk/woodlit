@@ -25,7 +25,7 @@ export default function ProductDetails() {
     function handleSubmit(){
       axios.post('http://localhost:8080/cart/add',{
         product,
-        quantity: 2
+        quantity: 1
       }, {withCredentials: true})
     }
   return (
@@ -38,7 +38,7 @@ export default function ProductDetails() {
         <div className='information'>
           <h1>{product.name}</h1>
           <p>€ {product.price}</p>
-          <button onClick={handleSubmit}>ADD TO CART</button>
+          <button onClick={() => handleSubmit()}>ADD TO CART</button>
             <div className='description'>
               <ul>
                 <li onClick={() => setActiveTab('description')} style={{borderBottom : activeTab === 'description' ? '1px solid black' : 'none'}}>DESCRIPTION</li>

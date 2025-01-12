@@ -39,7 +39,7 @@ export default function UserPanel() {
                     <ul>
                         <li>Account</li>
                         <li>Orders</li>
-                        <li onClick={() => logout()}>Logout</li>
+                        <li onClick={logout}>Logout</li>
                     </ul>
                 </div>
                 <div className='view'>

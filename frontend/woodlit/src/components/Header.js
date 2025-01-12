@@ -20,7 +20,7 @@ export default function Header() {
         <div className='header-navbar'>
         <a href='/'><img src={searchIcon} alt='none logo'/></a>
         <Link to="/user"><img src={profileIcon} alt='none logo'/></Link>
-        <a href='/'><img src={cartIcon} alt='none logo'/></a>
+        <Link to="/cart"><img src={cartIcon} alt='none logo'/></Link>
         </div>
     </header>
     <nav> 

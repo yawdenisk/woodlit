@@ -7,6 +7,7 @@ import UserPanel from "./components/UserPanel";
 import Login from "./components/Login";
 import React, { useEffect, useState } from 'react'
 import Registration from "./components/Registration";
+import Cart from "./components/Cart";
   
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/user" element={<UserPanel/>}></Route>
         <Route path="/login" element={<Login/>}></Route>
         <Route path="/register" element={<Registration/>}></Route>
+        <Route path="/cart" element={<Cart/>}></Route>
       </Routes>
       <Footer/>
     </Router>

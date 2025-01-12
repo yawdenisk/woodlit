@@ -49,7 +49,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeRequests(authorizeRequests ->
-                authorizeRequests.requestMatchers( "/product/get/{id}", "/product/getAll", "/user/create", "/user/login", "/product/upload", "/product/**").permitAll()
+                authorizeRequests.requestMatchers( "/product/get/{id}", "/product/getAll", "/user/create", "/user/login").permitAll()
                 .anyRequest().authenticated())
                 .build();
     }
