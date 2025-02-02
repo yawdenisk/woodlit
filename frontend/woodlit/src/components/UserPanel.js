@@ -9,7 +9,9 @@ export default function UserPanel() {
     const navigate = useNavigate();
     async function fetchUserDetails() {
             try{
-                const responce = await axios.get('http://localhost:8080/user/getUserDetails',{withCredentials:true})
+                const responce = await axios.get('http://localhost:8081/user/getUserDetails',{headers:{
+                    'Authorization': `Bearer ${localStorage.getItem("access_tocken")}`
+                }})
                 setUserDetails(responce.data);
             }catch(error){  
                 navigate('/login')

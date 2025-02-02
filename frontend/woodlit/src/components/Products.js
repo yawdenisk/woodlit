@@ -5,7 +5,7 @@ import loading from '../images/loading.svg'
 export default function Products() {
   const[products, setProducts] = useState([]);
   useEffect(() => {
-    axios.get('http://localhost:8080/product/getAll')
+    axios.get('http://localhost:8081/product/getAll')
     .then(responce => {
       setProducts(responce.data);
     })

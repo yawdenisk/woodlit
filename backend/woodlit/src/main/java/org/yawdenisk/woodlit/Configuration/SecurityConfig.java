@@ -27,9 +27,10 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
+        configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:8080"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
         configuration.setAllowedHeaders(List.of("Content-Type", "Authorization"));
+        configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
@@ -41,12 +42,12 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeRequests(authorizeRequests ->
                 authorizeRequests
-                        .requestMatchers( "/product/get/{id}", "/product/getAll", "/user/create", "/user/login")
+                        .requestMatchers( "/product/getAll", "/user/create", "/user/login")
                         .permitAll()
                         .anyRequest().authenticated());
         http.oauth2ResourceServer(resourceServer -> {
             resourceServer.jwt(jwtDecoder -> {
-                jwtDecoder.jwkSetUri("https://localhost:8080/auth/realms/woodlit");
+                jwtDecoder.jwkSetUri("http://localhost:8080/realms/woodlit/protocol/openid-connect/certs");
             });
         });
         return http.build();

@@ -11,13 +11,12 @@ import {Link, useNavigate } from 'react-router-dom';
     async function handleSubmit(event){ 
       event.preventDefault();
       try{
-        await axios.post("http://localhost:8080/user/login",{  
+        const responce = await axios.post("http://localhost:8081/user/login",{  
           email,
           password,
-        },
-          {withCredentials:true}  
-        );
+        })
         navigate("/user")
+        localStorage.setItem("access_tocken", responce.data)
     }catch(error){
       console.error(error);
     }};

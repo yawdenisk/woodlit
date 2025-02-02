@@ -8,7 +8,9 @@ export default function ProductDetails() {
     const [product, setProduct] = useState(null);
     const [activeTab, setActiveTab] = useState('description');
     useEffect(() => {
-        axios.get(`http://localhost:8080/product/get/${id}`)
+        axios.get(`http://localhost:8081/product/get/${id}`, {headers:{
+          'Authorization': `Bearer ${localStorage.getItem("access_tocken")}`
+      }})
         .then(response => {
             setProduct(response.data);
         })
