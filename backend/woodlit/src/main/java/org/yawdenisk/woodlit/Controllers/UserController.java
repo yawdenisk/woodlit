@@ -6,10 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.yawdenisk.woodlit.Entites.UserRequest;
 
@@ -43,6 +40,7 @@ public class UserController {
             params.add("username", userRequest.getEmail());
             params.add("password", userRequest.getPassword());
             params.add("grant_type", "password");
+            params.add("scope", "openid");
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -98,6 +96,30 @@ public class UserController {
             }
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error creating user: " + e.getMessage());
+        }
+    }
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(@RequestHeader("Authorization") String token) {
+        try{
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Authorization", token);
+            HttpEntity<String> entity = new HttpEntity<>(headers);
+            restTemplate.exchange("http://localhost:8080/realms/woodlit/protocol/openid-connect/logout",HttpMethod.POST, entity, String.class);
+            return ResponseEntity.ok().body("Logged out successfully");
+        }catch(Exception e){
+            return ResponseEntity.badRequest().body("Error logging out");
+        }
+    }
+    @GetMapping("/getUserDetails")
+    public ResponseEntity<?> getUserDetails(@RequestHeader("Authorization") String token) {
+        try{
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Authorization", token);
+            HttpEntity<String> entity = new HttpEntity<>(headers);
+            ResponseEntity<String> response = restTemplate.exchange("http://localhost:8080/realms/woodlit/protocol/openid-connect/userinfo",HttpMethod.GET, entity, String.class);
+            return ResponseEntity.ok().body(response.getBody());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error getting user details");
         }
     }
 }

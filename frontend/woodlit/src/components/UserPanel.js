@@ -27,8 +27,11 @@ export default function UserPanel() {
     }
     async function logout(){
         try{
-            await axios.post('http://localhost:8080/user/logout',{}, {withCredentials:true})
-            navigate('/')
+            await axios.post('http://localhost:8081/user/logout',{},{headers:{
+                'Authorization': `Bearer ${localStorage.getItem("access_tocken")}`
+            }});
+            localStorage.clear("Authorization")
+            navigate('/login')
         }catch(error){
             console.error(error);
         }
