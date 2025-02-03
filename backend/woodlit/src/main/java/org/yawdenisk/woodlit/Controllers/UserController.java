@@ -13,59 +13,91 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.yawdenisk.woodlit.Entites.UserRequest;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/user")
 public class UserController {
+
     @Value("${keycloak.tocken.url}")
-    private String url;
+    private String tockenUrl;
+
     @Value("${keycloak.client.id}")
     private String clientId;
+
     @Value("${keycloak.client.secret}")
     private String clientSecret;
+
+    @Value("${keucloak.registration.url}")
+    private String registrationUrl;
+
     @Autowired
     private RestTemplate restTemplate;
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserRequest userRequest) {
         try {
-            // Используем LinkedMultiValueMap для хранения параметров формы
             MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
             params.add("client_id", clientId);
-            params.add("client_secret", clientSecret); // Укажите секрет клиента
-            params.add("username", userRequest.getEmail()); // Используйте email как username
+            params.add("client_secret", clientSecret);
+            params.add("username", userRequest.getEmail());
             params.add("password", userRequest.getPassword());
             params.add("grant_type", "password");
-            System.out.println(params);
 
-            // Установка заголовков
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-            // Подготовка запроса
             HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(params, headers);
+            String response = restTemplate.postForObject(tockenUrl, entity, String.class);
 
-            // Отправка запроса на Keycloak
-            ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
+            ObjectMapper objectMapper = new ObjectMapper();
+            Map<String, Object> responseMap = objectMapper.readValue(response, Map.class);
+            String accessToken = (String) responseMap.get("access_token");
 
-            // Проверка успешности получения токена
-            if (response.getStatusCode() == HttpStatus.OK) {
-                String responseBody = response.getBody();
+            return ResponseEntity.ok().body(accessToken);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error logging in");
+        }
+    }
 
-                // Предположим, что responseBody это JSON строка
-                // Можно использовать библиотеку, например, Jackson для парсинга JSON
-                ObjectMapper objectMapper = new ObjectMapper();
-                Map<String, Object> responseMap = objectMapper.readValue(responseBody, Map.class);
+    @PostMapping("/create")
+    public ResponseEntity<?> create(@RequestBody UserRequest userRequest) {
+        try {
+            UserRequest adminRequest = new UserRequest();
+            adminRequest.setEmail("admin@admin.com");
+            adminRequest.setPassword("admin");
+            ResponseEntity<?> responseEntity = login(adminRequest);
+            String adminToken = (String) responseEntity.getBody();
 
-                // Извлекаем access_token из ответа
-                String accessToken = (String) responseMap.get("access_token");
-                return ResponseEntity.ok().body(accessToken);
+            Map<String, Object> user = new HashMap<>();
+            user.put("username", userRequest.getEmail());
+            user.put("email", userRequest.getEmail());
+            user.put("firstName", userRequest.getFirstName());
+            user.put("lastName", userRequest.getLastName());
+            user.put("enabled", true);
+
+            List<Map<String, Object>> credentials = new ArrayList<>();
+            Map<String, Object> password = new HashMap<>();
+            password.put("type", "password");
+            password.put("value", userRequest.getPassword());
+            password.put("temporary", false);
+            credentials.add(password);
+            user.put("credentials", credentials);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Authorization", "Bearer " + adminToken);
+            headers.setContentType(MediaType.APPLICATION_JSON);
+
+            HttpEntity<Map<String, Object>> entity = new HttpEntity<>(user, headers);
+            ResponseEntity<String> createResponse = restTemplate.exchange(registrationUrl, HttpMethod.POST, entity, String.class);
+
+            if (createResponse.getStatusCode() == HttpStatus.CREATED) {
+                return ResponseEntity.ok().body("User created successfully");
             } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to create user: " + createResponse.getBody());
             }
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error: " + e.getMessage());
+            return ResponseEntity.badRequest().body("Error creating user: " + e.getMessage());
         }
     }
 }

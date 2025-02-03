@@ -5,12 +5,8 @@ import { Link, useNavigate } from 'react-router-dom'
 export default function Registration() {
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
-    const [name, setName] = useState('');
+    const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
-    const [country, setCountry] = useState('');
-    const [city, setCity] = useState('');
-    const [address, setAddress] = useState('');
-    const [postIndex, setPostIndex] = useState('');
     const [errors, setErrors] = useState({});
 
     const navigate = useNavigate();
@@ -28,15 +24,11 @@ export default function Registration() {
             return;
         }
         try {
-            await axios.post('http://localhost:8080/user/create', {
+            await axios.post('http://localhost:8081/user/create', {
                 password,
                 email,
-                name,
-                last_name: lastName,
-                country,
-                city,
-                address,
-                post_index: postIndex
+                firstName,
+                lastName
             })
             navigate('/login')
         } catch (error) {
@@ -64,30 +56,13 @@ export default function Registration() {
             validationErrors.password = 'Password must be between 8 and 16 characters';
         }
 
-        if (!name.trim()) {
-            validationErrors.name = 'Name is required';
+        if (!firstName.trim()) {
+            validationErrors.firstName = 'Name is required';
         }
 
         if (!lastName.trim()) {
             validationErrors.lastName = 'Last name is required';
         }
-
-        if (!country.trim()) {
-            validationErrors.country = 'Country is required';
-        }
-
-        if (!city.trim()) {
-            validationErrors.city = 'City is required';
-        }
-
-        if (!address.trim()) {
-            validationErrors.address = 'City is required';
-        }
-
-        if (!postIndex.trim()) {     
-            validationErrors.postIndex = 'Postal code is required';
-        }
-
         return validationErrors;
     };
 
@@ -103,58 +78,30 @@ export default function Registration() {
             <input
                     type="text"
                     name="email"
-                    placeholder="email"
+                    placeholder="Email"
                     onChange={(e) => setEmail(e.target.value)}
                     style={getFieldStyle('email')} 
                 />
                 <input
                     type="text"
                     name="password"
-                    placeholder="password"
+                    placeholder="Password"
                     onChange={(e) => setPassword(e.target.value)}
                     style={getFieldStyle('password')} 
                 />
                 <input
                     type="text"
-                    name="name"
-                    placeholder="name"
-                    onChange={(e) => setName(e.target.value)}
+                    name="firstName"
+                    placeholder="First Name"
+                    onChange={(e) => setFirstName(e.target.value)}
                     style={getFieldStyle('name')}
                 />
                 <input
                     type="text"
                     name="lastName"
-                    placeholder="last name"
+                    placeholder="Last Name"
                     onChange={(e) => setLastName(e.target.value)}
                     style={getFieldStyle('lastName')}  
-                />
-                <input
-                    type="text"
-                    name="country"
-                    placeholder="country"
-                    onChange={(e) => setCountry(e.target.value)}
-                    style={getFieldStyle('country')} 
-                />
-                <input
-                    type="text"
-                    name="city"
-                    placeholder="city"
-                    onChange={(e) => setCity(e.target.value)}
-                    style={getFieldStyle('city')}  
-                />
-                <input
-                    type="text"
-                    name="address"
-                    placeholder="address"
-                    onChange={(e) => setAddress(e.target.value)}
-                    style={getFieldStyle('address')}  
-                />
-                <input
-                    type="text"
-                    name="postIndex"
-                    placeholder="post index"
-                    onChange={(e) => setPostIndex(e.target.value)}
-                    style={getFieldStyle('postIndex')}  
                 />
                 <button type="submit">Submit</button>
                 <h6>Already have an account? <Link to="/login">Sign in</Link></h6>
