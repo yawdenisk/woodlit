@@ -21,6 +21,8 @@ public class Cart {
     @Id
     @UuidGenerator
     private UUID id;
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
+    @OneToOne
+    private User user;
+    @OneToMany(mappedBy = "cart")
     private List<CartItem> items = new ArrayList<>();
 }

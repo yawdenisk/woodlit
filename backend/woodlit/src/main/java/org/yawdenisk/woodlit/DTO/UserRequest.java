@@ -1,4 +1,4 @@
-package org.yawdenisk.woodlit.Entites;
+package org.yawdenisk.woodlit.DTO;
 
 import lombok.Getter;
 import lombok.Setter;

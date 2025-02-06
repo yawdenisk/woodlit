@@ -21,7 +21,6 @@ public class CartItem {
     private Product product;
     @ManyToOne
     @JoinColumn(name = "cart_id")
-    @JsonIgnore
     private Cart cart;
     @Column(nullable = false)
     private Long quantity;

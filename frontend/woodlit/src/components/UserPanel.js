@@ -1,7 +1,6 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import loading from '../images/loading.svg'
-import Login from './Login';
 import { useNavigate } from 'react-router-dom';
 export default function UserPanel() {
     const[userDetails, setUserDetails] = useState({}); 
