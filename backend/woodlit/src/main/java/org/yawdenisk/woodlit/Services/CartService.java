@@ -3,6 +3,8 @@ package org.yawdenisk.woodlit.Services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.yawdenisk.woodlit.Entites.Cart;
+import org.yawdenisk.woodlit.Entites.CartItem;
+import org.yawdenisk.woodlit.Entites.User;
 import org.yawdenisk.woodlit.Repositories.CartRepository;
 
 import java.util.Optional;
@@ -16,4 +18,7 @@ public class CartService {
         cartRepository.save(cart);
     }
 
+    public void getCartByUser(User user) {
+        cartRepository.findByUser(user);
+    }
 }

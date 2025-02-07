@@ -8,9 +8,7 @@ export default function ProductDetails() {
     const [product, setProduct] = useState(null);
     const [activeTab, setActiveTab] = useState('description');
     useEffect(() => {
-        axios.get(`http://localhost:8081/product/get/${id}`, {headers:{
-          'Authorization': `Bearer ${localStorage.getItem("access_tocken")}`
-      }})
+        axios.get(`http://localhost:8081/product/get/${id}`)
         .then(response => {
             setProduct(response.data);
         })
@@ -25,10 +23,12 @@ export default function ProductDetails() {
       <span key={index}>{line}<br /></span>
     ));
     function handleSubmit(){
-      axios.post('http://localhost:8080/cart/add',{
+      axios.post('http://localhost:8081/cart/add',{
         product,
         quantity: 1
-      }, {withCredentials: true})
+      }, {headers:{
+        'Authorization': `Bearer ${localStorage.getItem("access_tocken")}`
+    }})
     }
   return (
     <>

@@ -9,6 +9,8 @@ import org.yawdenisk.woodlit.Entites.User;
 import org.yawdenisk.woodlit.Mappers.UserMapper;
 import org.yawdenisk.woodlit.Repositories.UserRepository;
 
+import java.util.Optional;
+
 @Service
 public class UserService {
     @Autowired
@@ -22,5 +24,9 @@ public class UserService {
         UserDetails userDetails = keycloakService.getUserDetails(tocken);
         User user = userMapper.userDetailsToUser(userDetails);
         userRepository.save(user);
+    }
+
+    public Optional<User> findUserByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 }
