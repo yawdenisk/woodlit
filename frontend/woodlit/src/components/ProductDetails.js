@@ -9,6 +9,7 @@ export default function ProductDetails({cart, setCart}) {
     const [activeTab, setActiveTab] = useState('description');
     useEffect(() => {
         axios.get(`http://localhost:8081/product/get/${id}`)
+<<<<<<< HEAD
             .then(response => {
                 setProduct({
                     ...response.data,
@@ -19,6 +20,14 @@ export default function ProductDetails({cart, setCart}) {
             .catch(error => {
                 console.error(error);
             })
+=======
+        .then(response => {
+            setProduct(response.data);
+        })
+        .catch(error => {
+            console.error(error);
+        })
+>>>>>>> 755a6ccaed2249c61ba200f3d31fea5eb3354d3b
     }, [id]);
    function addToCart(id){
         const existingProduct = cart.find(item => item.id === id);
@@ -32,7 +41,22 @@ export default function ProductDetails({cart, setCart}) {
         }
     };
     if (!product) {
+<<<<<<< HEAD
         return <div className='loading'><img src={loading} alt='none gif'></img></div>;
+=======
+      return <div className='loading'><img src={loading} alt='none gif'></img></div>; 
+    } 
+    const formattedFeatures = product.features.split("\n").map((line, index) => (
+      <span key={index}>{line}<br /></span>
+    ));
+    function handleSubmit(){
+      axios.post('http://localhost:8081/cart/add',{
+        product,
+        quantity: 1
+      }, {headers:{
+        'Authorization': `Bearer ${localStorage.getItem("access_tocken")}`
+    }})
+>>>>>>> 755a6ccaed2249c61ba200f3d31fea5eb3354d3b
     }
     const formattedFeatures = product.features.split("\n").map((line, index) => (
         <span key={index}>{line}<br/></span>
