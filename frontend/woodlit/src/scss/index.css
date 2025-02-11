@@ -279,6 +279,9 @@ nav a:hover {
   display: flex;
   align-items: center;
 }
+.cart ul li input {
+  vertical-align: middle;
+}
 .cart ul li button {
   margin: 10px;
   width: 30px;
@@ -325,4 +328,94 @@ nav a:hover {
 .cart .shipment a:last-child {
   background: none;
   border: 1px solid rgb(121, 227, 121);
+}
+
+.adminPanel {
+  display: flex;
+}
+.adminPanel .menu {
+  width: 30%;
+  text-align: center;
+}
+.adminPanel .menu ul {
+  border-right: 1px solid black;
+  list-style-type: none;
+}
+.adminPanel .menu ul li {
+  padding: 10px;
+  margin: 10px;
+  cursor: pointer;
+}
+.adminPanel .view {
+  width: 60%;
+  text-align: start;
+  padding: 20px 50px;
+}
+.adminPanel .view .updateProduct {
+  display: flex;
+  justify-content: space-between;
+}
+.adminPanel .view .updateProduct form label {
+  margin-top: 10px;
+  display: block;
+}
+.adminPanel .view .updateProduct form input {
+  width: 300px;
+  margin-right: 50px;
+}
+.adminPanel .view .updateProduct form textarea {
+  width: 300px;
+  height: 150px;
+  resize: none;
+}
+.adminPanel .view .updateProduct form button {
+  margin: 10px 0;
+  background-color: rgb(121, 227, 121);
+  border-radius: 15px;
+  width: 307px;
+  height: 40px;
+  font-size: 17px;
+  border: 1px solid black;
+  cursor: pointer;
+}
+.adminPanel .view .updateProduct img {
+  height: 400px;
+}
+.adminPanel .view ul {
+  display: flex;
+  flex-wrap: wrap;
+}
+.adminPanel .view ul li {
+  width: 150px;
+  margin: 10px;
+  padding: 10px;
+  border: 1px solid black;
+  text-align: center;
+  list-style-type: none;
+}
+.adminPanel .view ul li p {
+  font-size: 14px;
+}
+.adminPanel .view ul li img {
+  width: 100px;
+}
+.adminPanel .view ul li h4 {
+  font-weight: 300;
+  cursor: pointer;
+}
+.adminPanel .view ul li h4 img {
+  width: 15px;
+  vertical-align: middle;
+}
+
+.cartEmpty {
+  padding: 100px;
+}
+.cartEmpty p {
+  text-align: center;
+  font-size: 30px;
+}
+.cartEmpty img {
+  margin: 0 auto;
+  display: block;
 }/*# sourceMappingURL=index.css.map */

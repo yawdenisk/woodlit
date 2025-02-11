@@ -23,6 +23,8 @@ public class Product {
     private String description;
     @Column(nullable = false)
     private float price;
+    @Column(nullable = false)
+    private float instalationPrice;
     @Column(nullable = false, length = 1024)
     private String features;
 }

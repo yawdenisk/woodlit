@@ -272,6 +272,9 @@ nav{
                 display: flex;
                 align-items: center;
             }
+            input{
+                vertical-align: middle;
+            }
             button{
                 margin: 10px;
                 width: 30px;
@@ -320,5 +323,95 @@ nav{
             background: none;
             border: 1px solid rgb(121, 227, 121);
         }
+    }
+}
+.adminPanel{
+        display: flex;
+        .menu{
+            width: 30%;
+            text-align: center;
+            ul{
+                border-right: 1px solid black;
+                list-style-type: none;
+                li{
+                    padding: 10px;
+                    margin: 10px;
+                    cursor: pointer;
+                }
+            }
+        }
+        .view{
+            width: 60%;
+            text-align: start;
+            padding: 20px 50px;
+           .updateProduct{
+            display: flex;
+            justify-content: space-between;
+            form{
+                label{
+                    margin-top: 10px;
+                    display: block;
+                }
+                input{
+                    width: 300px;
+                    margin-right: 50px;
+                }
+                textarea{
+                    width: 300px;
+                    height: 150px;
+                    resize: none;
+                }
+                button{
+                    margin: 10px 0;
+                    background-color: rgb(121, 227, 121);
+                    border-radius: 15px;
+                    width: 307px;
+                    height: 40px;
+                    font-size: 17px;
+                    border: 1px solid black;
+                    cursor: pointer;
+                }
+            }
+            img{
+                height: 400px;
+            }
+           }
+            ul{
+                display: flex;
+                flex-wrap: wrap;
+                li{
+                    width: 150px    ;
+                    margin: 10px;
+                    padding: 10px;
+                    border: 1px solid black;
+                    text-align: center;
+                    list-style-type: none;
+                    p{
+                        font-size: 14px;
+                    }
+                    img{
+                        width: 100px;
+                    }
+                    h4{
+                        font-weight:300;
+                        cursor: pointer;
+                        img{
+                            width: 15px;
+                            vertical-align: middle;
+                        }
+                    }
+                }
+            }
+        } 
+}
+.cartEmpty{
+    padding: 100px;
+    p{
+        text-align: center;
+        font-size: 30px;
+    }
+    img{
+        margin: 0 auto;
+        display: block;
     }
 }
