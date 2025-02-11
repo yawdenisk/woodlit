@@ -9,8 +9,8 @@ import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 @Configuration
 public class S3Configuration {
-    String accessKey = "AKIAQXUIXKGABJPDMUPV";
-    String secretKey = "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";
+    String accessKey = "";
+    String secretKey = "";
     AwsCredentials credentials = AwsBasicCredentials.create(accessKey, secretKey);
     String regionName = "eu-north-1";
     @Bean
